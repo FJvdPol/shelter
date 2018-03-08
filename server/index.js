@@ -8,7 +8,7 @@ module.exports = express()
   .set('view engine', 'ejs')
   .set('views', 'view')
   .use(express.static('static'))
-  .use(express.static('db'))
+  .use('/image', express.static('db/image'))
   .get('/', all)
   /* TODO: Other HTTP methods. */
   // .post('/', add)
