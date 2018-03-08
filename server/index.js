@@ -9,16 +9,16 @@ module.exports = express()
   .set('views', 'view')
   .use(express.static('static'))
   .use('/image', express.static('db/image'))
-  .get('/', all)
+  .get('/', allAnimals)
   /* TODO: Other HTTP methods. */
   // .post('/', add)
-  // .get('/:id', get)
+  .get('/:id', getAnimal)
   // .put('/:id', set)
   // .patch('/:id', change)
   // .delete('/:id', remove)
   .listen(1902)
 
-function all(req, res) {
+function allAnimals(req, res) {
   var result = {errors: [], data: db.all()}
 
   /* Use the following to support just HTML:  */
@@ -29,4 +29,12 @@ function all(req, res) {
   //   json: () => res.json(result),
   //   html: () => res.render('list.ejs', Object.assign({}, result, helpers))
   // })
+}
+
+function getAnimal(req, res){
+    var id = req.params.id;
+    var result = {errors: [], data: db.get(id)}
+
+    /* Use the following to support just HTML:  */
+    res.render('detail.ejs', Object.assign({}, result, helpers))
 }
