@@ -16,6 +16,7 @@ module.exports = express()
   // .put('/:id', set)
   // .patch('/:id', change)
   // .delete('/:id', remove)
+  .use(notFound)
   .listen(1902)
 
 function allAnimals(req, res) {
@@ -31,10 +32,21 @@ function allAnimals(req, res) {
   // })
 }
 
-function getAnimal(req, res){
+function getAnimal(req, res, next){
     var id = req.params.id;
+
+    if (!db.has(id)){
+        next()
+        return
+    }
+
     var result = {errors: [], data: db.get(id)}
 
     /* Use the following to support just HTML:  */
     res.render('detail.ejs', Object.assign({}, result, helpers))
+}
+
+function notFound(req, res){
+    var err = {errors: [{id: '404'}]}
+    res.status(404).render('error.ejs', err)
 }
