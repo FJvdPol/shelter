@@ -39,8 +39,8 @@ function addAnimal(req, res, next){
         newAnimal = db.add(data)
         console.log("Added new animal!")
     } catch (err) {
-        console.log('Add to database error: ', err, '\n', data)
-        return
+        result = {errors: [{id: '422', title: 'Unprocessable entity'}], data: undefined}
+        return res.status(422).render('error.ejs', Object.assign({}, result, helpers))
     }
     res.redirect('/' + newAnimal.id)
 }
