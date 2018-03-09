@@ -33,20 +33,26 @@ function allAnimals(req, res) {
 }
 
 function getAnimal(req, res, next){
-    var id = req.params.id;
-
+    var id = req.params.id
+    console.log(db.has(id))
     if (!db.has(id)){
-        next()
-        return
+        return next({category: '404'})
     }
-
     var result = {errors: [], data: db.get(id)}
-
     /* Use the following to support just HTML:  */
     res.render('detail.ejs', Object.assign({}, result, helpers))
 }
 
-function notFound(req, res){
-    var err = {errors: [{id: '404'}]}
-    res.status(404).render('error.ejs', err)
+function notFound(err, req, res, next){
+    console.log("My testing of error: ", err)
+    var error = {errors: []}
+    var statusCode
+    if (err.category === 'invalid'){
+        statusCode = 400
+        error.errors[0] = {id: '400', title: 'Bad Request'}
+    } else {
+        statusCode = 404
+        error.errors[0] = {id: '404', title: 'Page not Found'}
+    }
+    res.status(statusCode).render('error.ejs', error)
 }
