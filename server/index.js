@@ -10,12 +10,11 @@ module.exports = express()
   .use(express.static('static'))
   .use('/image', express.static('db/image'))
   .get('/', allAnimals)
-  /* TODO: Other HTTP methods. */
   // .post('/', add)
   .get('/:id', getAnimal)
   // .put('/:id', set)
   // .patch('/:id', change)
-  // .delete('/:id', remove)
+  .delete('/:id', removeAnimal)
   .use(notFound)
   .listen(1902)
 
@@ -34,13 +33,33 @@ function allAnimals(req, res) {
 
 function getAnimal(req, res, next){
     var id = req.params.id
-    console.log(db.has(id))
+
+    checkAnimal(id, next)
+
+    var result = {errors: [], data: db.get(id)}
+    res.format({
+      json: () => res.json(result),
+      html: () => res.render('list.ejs', Object.assign({}, result, helpers))
+    })
+}
+
+function removeAnimal(req, res, next){
+    var id = req.params.id
+
+    checkAnimal(id, next)
+    
+    var result = {errors: [], data: db.get(id)}
+    res.status(204).json(result)
+    db.remove(id);
+}
+
+function checkAnimal(id, next){
     if (!db.has(id)){
+        if (db.removed(id)){
+            return next({category: '410'})
+        }
         return next({category: '404'})
     }
-    var result = {errors: [], data: db.get(id)}
-    /* Use the following to support just HTML:  */
-    res.render('detail.ejs', Object.assign({}, result, helpers))
 }
 
 function notFound(err, req, res, next){
@@ -50,6 +69,9 @@ function notFound(err, req, res, next){
     if (err.category === 'invalid'){
         statusCode = 400
         error.errors[0] = {id: '400', title: 'Bad Request'}
+    } else if (err.category === '410') {
+        statusCode = 410
+        error.errors[0] = {id: '410', title: 'Page was deleted'}
     } else {
         statusCode = 404
         error.errors[0] = {id: '404', title: 'Page not Found'}
