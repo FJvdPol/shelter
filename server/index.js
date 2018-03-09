@@ -34,12 +34,15 @@ function allAnimals(req, res) {
 
 function addAnimal(req, res, next){
     var data = helpers.configureAddData(req.body.data)
-
+    var newAnimal
     try {
-        db.add(data)
+        newAnimal = db.add(data)
+        console.log("Added new animal!")
     } catch (err) {
         console.log('Add to database error: ', err, '\n', data)
+        return
     }
+    res.redirect('/' + newAnimal.id)
 }
 
 function getAnimal(req, res){
@@ -58,14 +61,9 @@ function removeAnimal(req, res, next){
     var id = req.params.id
     var requestedAnimal = checkAnimal(id, res)
     if (requestedAnimal.exists){
-        res.status(204).json(result)
+        res.status(204).json(requestedAnimal)
         db.remove(id)
     }
-}
-
-
-function notFound(err, req, res, next){
-    console.log("Uncaught error: ", err)
 }
 
 function checkAnimal(id, res){
@@ -92,4 +90,8 @@ function checkAnimal(id, res){
         res.status(statusCode).render('error.ejs', Object.assign({}, result, helpers))
     }
     return result
+}
+
+function notFound(err, req, res, next){
+    console.log("Uncaught error: ", err)
 }
