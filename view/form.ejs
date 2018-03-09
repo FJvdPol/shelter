@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf8>
+<meta name=viewport content=width=device-width,initial-scale=1>
+<link rel="shortcut icon" type=image/x-icon href=data:image/x-icon;,>
+<title>Add</title>
+<link rel=stylesheet href=/index.css>
+<main class=container>
+    <form id="add-form" action="/" method="post">
+
+        <input type="text" name="data[name]" placeholder="name" required>
+
+        <select name="data[type]" id="type" required>
+            <option selected value="dog">Dog</option>
+            <option value="cat">Cat</option>
+            <option value="rabbit">Rabbit</option>
+        </select>
+
+        <select name="data[place]" required>
+            <option selected value="Brooklyn Animal Care Center">Brooklyn Animal Care Center</option>
+            <option value="Manhattan Animal Care Center">Manhattan Animal Care Center</option>
+            <option value="Staten Island Animal Care Center">Staten Island Animal Care Center</option>
+        </select>
+
+        <input type="text" name="data[description]" placeholder="description">
+
+        <fieldset>
+            <legend>Sex:</legend>
+            <label for="sex-male">Male</label>
+            <input type="radio" name="data[sex]" id="sex-male" value="male" required checked>
+            <label for="sex-female">Female</label>
+            <input type="radio" name="data[sex]" id="sex-female" value="female" required>
+        </fieldset>
+
+        <input type="number" name="data[age]" placeholder="age" required>
+
+        <input type="number" name="data[weight]" placeholder="weight">
+
+        <fieldset>
+            <legend>Size:</legend>
+            <label for="size-small">Small</label>
+            <input type="radio" name="data[size]" id="size-small" value="small" checked>
+            <label for="size-medium">Medium</label>
+            <input type="radio" name="data[size]" id="size-medium" value="medium">
+            <label for="size-large">Large</label>
+            <input type="radio" name="data[size]" id="size-large" value="large">
+        </fieldset>
+
+        <fieldset>
+            <legend>Length:</legend>
+            <label for="length-short">Short</label>
+            <input type="radio" name="data[length]" id="length-short" value="short" checked>
+            <label for="length-medium">Medium</label>
+            <input type="radio" name="data[length]" id="length-medium" value="medium">
+            <label for="length-long">Long</label>
+            <input type="radio" name="data[length]" id="length-long" value="long">
+        </fieldset>
+
+        <fieldset>
+            <legend>Coat:</legend>
+            <label for="coat-smooth">Smooth</label>
+            <input type="radio" name="data[coat]" id="coat-smooth" value="smooth">
+            <label for="coat-thick">Thick</label>
+            <input type="radio" name="data[coat]" id="coat-thick" value="thick" checked>
+        </fieldset>
+
+        <fieldset>
+            <legend>Vaccinated:</legend>
+            <label for="vaccinated-true">Vaccinated</label>
+            <input type="radio" name="data[vaccinated]" id="vaccinated-true" value="true" required>
+            <label for="vaccinated-false">Not vaccinated</label>
+            <input type="radio" name="data[vaccinated]" id="vaccinated-false" value="false" checked required>
+        </fieldset>
+
+        <fieldset id="declawed"class="hidden">
+            <legend>Declawed:</legend>
+            <label for="declawed-true">Declawed</label>
+            <input type="radio" name="data[declawed]" id="declawed-true" value="true">
+            <label for="declawed-false">Not declawed</label>
+            <input type="radio" name="data[declawed]" id="declawed-false" value="false" checked>
+        </fieldset>
+
+
+        <input type="text" name="data[primaryColor]" placeholder="primary color" required>
+        <input type="text" name="data[secondaryColor]" placeholder="secondary color">
+
+        <input type="date" id="date" name="data[intake]" placeholder="intake date" required>
+
+        <input type="submit" value="Add Animal">
+    </form>
+</main>
+<!-- <script src=/handleaddform.js></script> -->
+<script src=/index.js></script>
+<script>
+    document.querySelector("#date").valueAsDate = new Date()
+    document.querySelector("#type").addEventListener("change", function(){
+        if (value === "cat"){
+            document.querySelector("#declawed").classList.remove("hidden")
+        }
+    })
+</script>
+
+<!--
+id: '18646',
+    name: 'Fiona',
+    type: 'dog',
+    place: 'Brooklyn Animal Care Center',
+    description: '',
+    sex: 'female',
+    age: 2,
+    size: 'large',
+    vaccinated: true,
+    primaryColor: 'brown brindle',
+    secondaryColor: null,
+    weight: 31.5,
+    intakeDate: '2018-01-19'
+-->

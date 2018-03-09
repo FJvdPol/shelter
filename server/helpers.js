@@ -2,6 +2,7 @@
 
 exports.description = description
 exports.plural = plural
+exports.configureAddData = configureAddData
 
 function description(data) {
   var value
@@ -47,4 +48,22 @@ function description(data) {
 
 function plural(word, value) {
   return value === 1 ? word : word + 's'
+}
+
+function configureAddData(data){
+    data.age = Number(data.age)
+    data.weight = Number(data.weight)
+    data.vaccinated === 'true' ?
+     data.vaccinated = true
+     : data.vaccinated = false
+    data.declawed === 'true' ?
+     data.declawed = true
+     : data.declawed = false
+    if (data.secondaryColor === ''){
+        data.secondaryColor = undefined
+    }
+    if (data.type !== 'cat') {
+        data.declawed = undefined
+    }
+    return data
 }
