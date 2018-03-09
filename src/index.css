@@ -192,6 +192,7 @@ input[type=submit i] {
 button,
 input[type=submit i],
 .primary-action {
+  margin-top: 1.25rem;
   padding: 1em;
   background-color: deeppink;
   color: whitesmoke;
@@ -230,6 +231,7 @@ select {
 
 label {
   margin: calc(1em + 1ex) 0;
+  margin-bottom: 0.25rem;
 }
 
 input:not([type]),
@@ -237,6 +239,7 @@ input[type=text i],
 input[type=number i],
 input[type=date i],
 textarea,
+fieldset,
 select {
   display: block;
   background-color: snow;
@@ -265,4 +268,29 @@ textarea[required] {
   background-repeat: no-repeat;
   background-position: center right;
   background-size: 1em;
+}
+fieldset {
+    margin-top: calc(1rem + 1ex);
+}
+legend {
+    font-size: 1rem;
+}
+.label-input-holder {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.label-input-holder label {
+    margin-bottom: calc(1em + 1ex);
+    margin-right: auto;
+}
+.label-input-holder label, input {
+    display: block;
+}
+
+.hidden {
+    visibility: hidden;
+    display: none;
 }

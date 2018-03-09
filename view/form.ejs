@@ -7,83 +7,101 @@
 <link rel=stylesheet href=/index.css>
 <main class=container>
     <form id="add-form" action="/" method="post">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="data[name]" placeholder="ex. Fluffy" required>
 
-        <input type="text" name="data[name]" placeholder="name" required>
-
+        <label for="type">Type animal</label>
         <select name="data[type]" id="type" required>
             <option selected value="dog">Dog</option>
             <option value="cat">Cat</option>
             <option value="rabbit">Rabbit</option>
         </select>
 
-        <select name="data[place]" required>
+        <label for="place">Currently staying at</label>
+        <select name="data[place]" id="place" required>
             <option selected value="Brooklyn Animal Care Center">Brooklyn Animal Care Center</option>
             <option value="Manhattan Animal Care Center">Manhattan Animal Care Center</option>
             <option value="Staten Island Animal Care Center">Staten Island Animal Care Center</option>
         </select>
 
-        <input type="text" name="data[description]" placeholder="description">
+        <label for="description">Animal's description</label>
+        <input type="text" id="description" name="data[description]" placeholder="Ex. Really nice looking cat, good with kids">
 
         <fieldset>
-            <legend>Sex:</legend>
-            <label for="sex-male">Male</label>
-            <input type="radio" name="data[sex]" id="sex-male" value="male" required checked>
-            <label for="sex-female">Female</label>
-            <input type="radio" name="data[sex]" id="sex-female" value="female" required>
+            <legend>Sex</legend>
+            <div class="label-input-holder">
+                <input type="radio" name="data[sex]" id="sex-male" value="male" required checked>
+                <label for="sex-male">Male</label>
+                <input type="radio" name="data[sex]" id="sex-female" value="female" required>
+                <label for="sex-female">Female</label>
+            </div>
         </fieldset>
 
-        <input type="number" name="data[age]" placeholder="age" required>
+        <label for="age">Animal's age</label>
+        <input type="number" id="age" name="data[age]" placeholder="Ex. 6" required>
 
-        <input type="number" name="data[weight]" placeholder="weight">
-
-        <fieldset>
-            <legend>Size:</legend>
-            <label for="size-small">Small</label>
-            <input type="radio" name="data[size]" id="size-small" value="small" checked>
-            <label for="size-medium">Medium</label>
-            <input type="radio" name="data[size]" id="size-medium" value="medium">
-            <label for="size-large">Large</label>
-            <input type="radio" name="data[size]" id="size-large" value="large">
-        </fieldset>
+        <label for="weight">Animal's weight in kilogrammes</label>
+        <input type="number" name="data[weight]" placeholder="Ex. 12">
 
         <fieldset>
-            <legend>Length:</legend>
-            <label for="length-short">Short</label>
-            <input type="radio" name="data[length]" id="length-short" value="short" checked>
-            <label for="length-medium">Medium</label>
-            <input type="radio" name="data[length]" id="length-medium" value="medium">
-            <label for="length-long">Long</label>
-            <input type="radio" name="data[length]" id="length-long" value="long">
+            <legend>Size</legend>
+            <div class="label-input-holder">
+                <input type="radio" name="data[size]" id="size-small" value="small" checked>
+                <label for="size-small">Small</label>
+                <input type="radio" name="data[size]" id="size-medium" value="medium">
+                <label for="size-medium">Medium</label>
+                <input type="radio" name="data[size]" id="size-large" value="large">
+                <label for="size-large">Large</label>
+            </div>
         </fieldset>
 
         <fieldset>
-            <legend>Coat:</legend>
-            <label for="coat-smooth">Smooth</label>
-            <input type="radio" name="data[coat]" id="coat-smooth" value="smooth">
-            <label for="coat-thick">Thick</label>
-            <input type="radio" name="data[coat]" id="coat-thick" value="thick" checked>
+            <legend>Length</legend>
+            <div class="label-input-holder">
+                <input type="radio" name="data[length]" id="length-short" value="short" checked>
+                <label for="length-short">Short</label>
+                <input type="radio" name="data[length]" id="length-medium" value="medium">
+                <label for="length-medium">Medium</label>
+                <input type="radio" name="data[length]" id="length-long" value="long">
+                <label for="length-long">Long</label>
+            </div>
         </fieldset>
 
         <fieldset>
-            <legend>Vaccinated:</legend>
-            <label for="vaccinated-true">Vaccinated</label>
-            <input type="radio" name="data[vaccinated]" id="vaccinated-true" value="true" required>
-            <label for="vaccinated-false">Not vaccinated</label>
-            <input type="radio" name="data[vaccinated]" id="vaccinated-false" value="false" checked required>
+            <legend>Fur type</legend>
+            <div class="label-input-holder">
+                <input type="radio" name="data[coat]" id="coat-smooth" value="smooth">
+                <label for="coat-smooth">Smooth</label>
+                <input type="radio" name="data[coat]" id="coat-thick" value="thick" checked>
+                <label for="coat-thick">Thick</label>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Has the animal been vaccinated</legend>
+            <div class="label-input-holder">
+                <input type="radio" name="data[vaccinated]" id="vaccinated-true" value="true" required>
+                <label for="vaccinated-true">It's vaccinated</label>
+                <input type="radio" name="data[vaccinated]" id="vaccinated-false" value="false" checked required>
+                <label for="vaccinated-false">Not vaccinated</label>
+            </div>
         </fieldset>
 
         <fieldset id="declawed"class="hidden">
-            <legend>Declawed:</legend>
-            <label for="declawed-true">Declawed</label>
-            <input type="radio" name="data[declawed]" id="declawed-true" value="true">
-            <label for="declawed-false">Not declawed</label>
-            <input type="radio" name="data[declawed]" id="declawed-false" value="false" checked>
+            <legend>Is the cat declawed:</legend>
+            <div class="label-input-holder">
+                <input type="radio" name="data[declawed]" id="declawed-true" value="true">
+                <label for="declawed-true">Cat is declawed</label>
+                <input type="radio" name="data[declawed]" id="declawed-false" value="false" checked>
+                <label for="declawed-false">Cat is not declawed</label>
+            </div>
         </fieldset>
 
+        <label for="primaryColor">Color of the animal</label>
+        <input type="text" id="primaryColor" name="data[primaryColor]" placeholder="primary color" required>
+        <input type="text" name="data[secondaryColor]" placeholder="secondary color (optional)">
 
-        <input type="text" name="data[primaryColor]" placeholder="primary color" required>
-        <input type="text" name="data[secondaryColor]" placeholder="secondary color">
-
+        <label for="date">What date was the animal brought in?</label>
         <input type="date" id="date" name="data[intake]" placeholder="intake date" required>
 
         <input type="submit" value="Add Animal">
@@ -93,9 +111,15 @@
 <script src=/index.js></script>
 <script>
     document.querySelector("#date").valueAsDate = new Date()
-    document.querySelector("#type").addEventListener("change", function(){
-        if (value === "cat"){
+
+    var type = document.querySelector("#type")
+    type.addEventListener("change", function(){
+        if (type.value === "cat"){
             document.querySelector("#declawed").classList.remove("hidden")
+        } else {
+            if (!type.classList.contains("hidden")){
+                document.querySelector("#declawed").classList.add("hidden")
+            }
         }
     })
 </script>
