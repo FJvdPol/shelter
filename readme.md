@@ -3,7 +3,6 @@
 # Shelter
 
 > A partially working Express server.
-> Can you fix and finish it?
 
 ![](screenshot.png)
 
@@ -21,8 +20,29 @@ npm start # runs server on `localhost:1902`
 
 ## Todo
 
-There’s a lot of things left to do.
-See the [assignment][] description for more info.
+I still need to try to add support for PUT and PATCH requests
+
+## What did I work on
+
+I, Folkert-Jan van der Pol, worked on:
+* Adding support for the serving of images by the database
+* Handling GET requests to specific id's of animals
+* Handling DELETE requests to specific id's of animals
+* support for response in either HTML or JSON
+* Adding new animals via /add
+* Adding new animals via curl request using JSON data
+* Uploading images for newly created animals
+* Error handling:
+    * 404 Page not found
+    * 400 Bad request
+    * 410 Deleted
+    * 500 Internal server error
+
+
+### What succeeded / failed
+
+All above additions are, as far as I have tested, working.
+I have as of yet failed to add support for PUT and PATCH requests, due to a lack of time. The handling of these requests might be added in the near future.
 
 ## Brief description of code
 
@@ -60,9 +80,12 @@ volunteering at your local animal shelter, or donating!
 
 [MIT][] © [Titus Wormer][author]
 
+[MIT][] © [Folkert-Jan van der Pol][student]
+
 [mit]: license
 
 [author]: http://wooorm.com
+[student]: https://github.com/FJvdPol
 
 [assignment]: https://github.com/cmda-be/course-17-18/blob/master/week-4.md#shelter
 
