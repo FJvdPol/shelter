@@ -6,7 +6,7 @@
 <title>Add</title>
 <link rel=stylesheet href=/index.css>
 <main class=container>
-    <form id="add-form" action="/" method="post">
+    <form id="add-form" action="/" method="post" enctype="multipart/form-data"> <!--enctype="multipart/form-data"-->
         <label for="name">Name</label>
         <input type="text" id="name" name="data[name]" placeholder="ex. Fluffy" required>
 
@@ -104,10 +104,12 @@
         <label for="date">What date was the animal brought in?</label>
         <input type="date" id="date" name="data[intake]" placeholder="intake date" required>
 
+        <label for="image">Choose a picture for the Animal:</label>
+        <input id="image" type="file" name="image" accept="image/jpeg">
+
         <input type="submit" value="Add Animal">
     </form>
 </main>
-<!-- <script src=/handleaddform.js></script> -->
 <script src=/index.js></script>
 <script>
     document.querySelector("#date").valueAsDate = new Date()
