@@ -3,19 +3,31 @@
 var fs = require('fs')
 var express = require('express')
 var bodyParser = require('body-parser')
-var db = require('../db')
+var mysql = require('mysql')
 var helpers = require('./helpers')
 var multer = require('multer')
 
+// lees de dotenv uit
+require('dotenv').config()
 
-var upload = multer({dest: 'db/image'})
+// config verbinding met de database met de juiste credentials uit de dotenv
+var connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
+})
+
+// maak verbinding
+connection.connect()
+
+var upload = multer({dest: 'static/image'})
 
 
 module.exports = express()
   .set('view engine', 'ejs')
   .set('views', 'view')
   .use(express.static('static'))
-  .use('/image', express.static('db/image'))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({extended: true}))
   .get('/', allAnimals)
