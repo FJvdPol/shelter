@@ -1,3 +1,7 @@
+// GLOBAL SOURCES
+// Most query commands were inspired by the mysql-server written by Titus Wormer: https://github.com/cmda-be/course-17-18/blob/master/examples/mysql-server/index.js
+//
+
 'use strict'
 
 var fs = require('fs')
@@ -101,11 +105,7 @@ function getAnimal(req, res, next){
     connection.query('SELECT * FROM animal WHERE id = ?', id, onGetAnimal)
     function onGetAnimal(err, data){
         if (err || data.length === 0){
-            if (id.match(/^[0-9]+$/) != null) { // if requested id is number
-                result.errors.push({id: 404, title: 'page not found'})
-            } else { // if request id is not a number
-                result.errors.push({id: 400, title: 'Bad request'})
-            }
+            result = getIdErrResult(id, result)
             if (err){
                 result.errors.push(err)
             }
@@ -122,11 +122,31 @@ function getAnimal(req, res, next){
 
 function removeAnimal(req, res, next){
     var id = req.params.id
-    var requestedAnimal = checkAnimal(id, res)
-    if (requestedAnimal.exists){
-        res.status(204).json(requestedAnimal)
-        db.remove(id)
+    connection.query('DELETE FROM animal WHERE id = ?', id, onRemoveAnimal)
+
+    function onRemoveAnimal(err, data){
+        var result = {errors: [], data: null}
+        if (err){
+            result = getIdErrResult(id, result);
+            result.errors.push(err)
+            showErrorPage(result, res)
+        } else {
+            result.data = data
+            res.status(204).json(result)
+        }
     }
+
+
+}
+
+function getIdErrResult(id, result){
+    //.match regex on next line was found here: https://stackoverflow.com/questions/1779013/check-if-string-contains-only-digits
+    if (id.match(/^[0-9]+$/) != null) { // if requested id is number
+        result.errors.push({id: 404, title: 'page not found'})
+    } else { // if request id is not a number
+        result.errors.push({id: 400, title: 'Bad request'})
+    }
+    return result
 }
 
 function showErrorPage(result, res) {
