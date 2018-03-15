@@ -19,10 +19,10 @@
         </select>
 
         <label for="place">Currently staying at</label>
-        <select name="data[place]" id="place" required>
-            <option selected value="Brooklyn Animal Care Center">Brooklyn Animal Care Center</option>
-            <option value="Manhattan Animal Care Center">Manhattan Animal Care Center</option>
-            <option value="Staten Island Animal Care Center">Staten Island Animal Care Center</option>
+        <select name="data[shelterID]" id="place" required>
+            <option selected value="1">Brooklyn Animal Care Center</option>
+            <option value="2">Manhattan Animal Care Center</option>
+            <option value="3">Staten Island Animal Care Center</option>
         </select>
 
         <label for="description">Animal's description</label>
@@ -103,7 +103,7 @@
         <input type="text" name="data[secondaryColor]" placeholder="secondary color (optional)">
 
         <label for="date">What date was the animal brought in?</label>
-        <input type="date" id="date" name="data[intake]" placeholder="intake date" required>
+        <input type="date" id="date" name="data[date]" placeholder="intake date" required>
 
         <label for="image">Choose a picture for the Animal:</label>
         <input id="image" type="file" name="image" accept="image/jpeg">

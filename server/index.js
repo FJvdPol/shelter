@@ -44,9 +44,19 @@ function renderForm(req, res){
     res.render('form.ejs')
 }
 
-function allAnimals(req, res) {
-  var result = {errors: [], data: db.all()}
-  res.render('list.ejs', Object.assign({}, result, helpers))
+function allAnimals(req, res, next) {
+  connection.query('SELECT * FROM animal', getAllDone)
+  function getAllDone(err, data){
+      var result = {errors: [], data: null}
+      if (err) {
+          console.log('get all error: ', err)
+          result.errors.push(err)
+          showErrorPage(result, res)
+          return next(err)
+      }
+      result.data = data
+      res.render('list.ejs', Object.assign({}, result, helpers))
+  }
 }
 
 function addAnimal(req, res, next){
@@ -58,39 +68,55 @@ function addAnimal(req, res, next){
         data = helpers.configureAddData(req.body.data)
     }
     // end source
-    var newAnimal
-    try {
-        newAnimal = db.add(data)
-        if (req.file){
-            fs.rename(req.file.path, 'db/image/'+newAnimal.id+'.jpg')
-        }
-    } catch (err) {
-        // following code was based of JonahGold's shelter assignment via: https://github.com/theonejonahgold/shelter/blob/master/server/index.js
-        if (req.file) {
-            fs.unlink(req.file.path, function (fsErr) {
-                if (fsErr) {
-                    return showErrorPage(500, {title: 'Internal Server Error'}, res, fsErr)
-                } else {
-                    return showErrorPage(422, {title: 'Unprocessable entity'}, res, fsErr)
-                }
-            })
+    connection.query('INSERT INTO animal SET ?', data, onAddAnimal)
+
+    function onAddAnimal(err, data){
+        if (err) {
+            var result = {errors: [], data: null}
+            if (req.file) {
+                fs.unlink(req.file.path, function(fsErr) {
+                    if (fsErr) {
+                        result.errors.push({id:400, title: 'Internal server error'}, fsErr)
+                    } else {
+                        result.errors.push({id: 422, title: 'Unprocessable entity'})
+                    }
+                })
+            } else {
+                result.errors.push({id: 422, title: 'Unprocessable entity'}, err)
+            }
+            return showErrorPage(result, res)
         } else {
-            return showErrorPage(422, {title: 'Unprocessable entity'}, res, err)
+            if (req.file){
+                fs.rename(req.file.path, 'image/'+data.insertId+'.jpg')
+            }
+            res.redirect('/' + data.insertId)
         }
-        // end source
     }
-    res.redirect('/' + newAnimal.id)
 }
 
 
-function getAnimal(req, res){
+function getAnimal(req, res, next){
+    var result = {errors: [], data: null}
     var id = req.params.id
-    var requestedAnimal = checkAnimal(id, res)
-    if (requestedAnimal.exists) {
-        res.format({
-            json: () => res.json(requestedAnimal),
-            html: () => res.render('detail.ejs', Object.assign({}, requestedAnimal, helpers))
-        })
+    connection.query('SELECT * FROM animal WHERE id = ?', id, onGetAnimal)
+    function onGetAnimal(err, data){
+        if (err || data.length === 0){
+            if (id.match(/^[0-9]+$/) != null) { // if requested id is number
+                result.errors.push({id: 404, title: 'page not found'})
+            } else { // if request id is not a number
+                result.errors.push({id: 400, title: 'Bad request'})
+            }
+            if (err){
+                result.errors.push(err)
+            }
+            return showErrorPage(result, res)
+        } else {
+            result.data = data[0]
+            res.format({
+                json: () => res.json(result),
+                html: () => res.render('detail.ejs', Object.assign({}, result, helpers))
+            })
+        }
     }
 }
 
@@ -103,50 +129,15 @@ function removeAnimal(req, res, next){
     }
 }
 
-function checkAnimal(id, res){
-    var has
-    var result = {errors: [], data: undefined}
-    try {
-        has = db.has(id)
-    } catch (err) {
-        result = showErrorPage(400, {title: 'Bad request'}, res, err)
-    }
-    if (has) {
-        result.exists = true
-        result.data = db.get(id)
-    } else {
-        if (db.removed(id)){
-            result = showErrorPage(410, {title: 'Page was deleted'}, res)
-        }
-        else {
-            result = showErrorPage(404, {title: 'Page not found'}, res)
-        }
-    }
-    return result
-}
-
-function showErrorPage(code, myErr, res, err) {
-    var result = {
-        errors: [{
-            id: code.toString(),
-            title: myErr.title
-        }],
-        data: undefined
-    }
-    if (err){
-        result.errors.push(err)
-        console.log(code, err)
-    }  else {
-        err = undefined
-    }
+function showErrorPage(result, res) {
+    console.log('There were errors: ', result.errors)
+    var status = result.errors[0].id
     res.format({
-        json: () => res.status(code).json(result),
-        html: () => res.status(code).render('error.ejs', Object.assign({}, result, helpers))
+        json: () => res.status(status).json(result),
+        html: () => res.status(status).render('error.ejs', Object.assign({}, result, helpers))
     })
-
-    return result
 }
 
 function notFound(err, req, res, next){
-    showErrorPage(500, {title: 'Internal server error'}, res, err)
+    console.log('notFound err: ', err)
 }
