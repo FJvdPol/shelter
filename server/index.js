@@ -90,8 +90,9 @@ function addAnimal(req, res, next){
             }
             return showErrorPage(result, res)
         } else {
+            var id = data.insertId
             if (req.file){
-                fs.rename(req.file.path, 'image/'+data.insertId+'.jpg')
+                fs.rename(req.file.path, 'static/image/'+data.insertId+'.jpg')
             }
             res.redirect('/' + data.insertId)
         }
@@ -127,9 +128,9 @@ function removeAnimal(req, res, next){
     function onRemoveAnimal(err, data){
         var result = {errors: [], data: null}
         if (err){
-            result = getIdErrResult(id, result);
+            result = getIdErrResult(id, result)
             result.errors.push(err)
-            showErrorPage(result, res)
+            return showErrorPage(result, res)
         } else {
             result.data = data
             res.status(204).json(result)
