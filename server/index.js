@@ -103,7 +103,7 @@ function addAnimal(req, res, next){
 function getAnimal(req, res, next){
     var result = {errors: [], data: null}
     var id = req.params.id
-    connection.query('SELECT * FROM animal WHERE id = ?', id, onGetAnimal)
+    connection.query('SELECT animal.*, shelter.shelterName, shelter.shelterAddress, shelter.shelterCity FROM animal LEFT JOIN shelter ON animal.shelterId=shelter.sh_id WHERE animal.id = ?', id, onGetAnimal)
     function onGetAnimal(err, data){
         if (err || data.length === 0){
             result = getIdErrResult(id, result)
@@ -112,6 +112,7 @@ function getAnimal(req, res, next){
             }
             return showErrorPage(result, res)
         } else {
+
             result.data = data[0]
             res.format({
                 json: () => res.json(result),
@@ -132,12 +133,10 @@ function removeAnimal(req, res, next){
             result.errors.push(err)
             return showErrorPage(result, res)
         } else {
-            result.data = data
+            result.data = data[0]
             res.status(204).json(result)
         }
     }
-
-
 }
 
 function getIdErrResult(id, result){

@@ -23,9 +23,11 @@
     <%
       Object.keys(data).forEach(function (key) {
         var value = data[key]
-        if (key == 'name' || key == 'description' || key == 'id') return
+        if (key == 'name' || key == 'description' || key == 'id' || key == 'shelterID') return
         if (key == 'primaryColor') key = 'primary color'
         if (key == 'secondaryColor') key = 'secondary color'
+        if (key.includes('shelter') && key != 'shelterName') key = key.split('shelter').join('')
+        if (key == 'shelterName') key = 'shelter branch'
         if (value === null || value === undefined) return
     %>
       <dt><%= key %></dt>
