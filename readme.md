@@ -1,12 +1,8 @@
 <!-- lint disable no-html -->
 
-# Shelter
+# Storage
 
-> A partially working Express server.
-
-![](screenshot.png)
-
-![](screenshot-detail.png)
+> An Animal Shelter express server working with MySQL database
 
 ## Install
 
@@ -17,41 +13,68 @@ npm install
 npm run build # build and minify static files
 npm start # runs server on `localhost:1902`
 ```
+And, of course, you'll need a database.
+## Usage
+## 1. Setup database
 
-## Todo
+There are two methods to make a fitting database:
+#### Method one: by hand
+Create the following tables and columns in the database:
+![Database example](/screenshot_databasegraph.png)
+Now add a few animals via `localhost:1902/add`!
 
-I still need to try to add support for PUT and PATCH requests
+#### Method two: importing the SQL file
+In the projects' db map you'll find a file called `db_animalshelter_backup.sql`   
+Make a new MySQL Database and import the sql file via the command line using the following command in the project's root directory:
+```
+mysql -u [your_username] -p [your_new_database_name] < db/db_animalshelter_backup.sql
+```
+You will be prompted to enter your account's password and voila, the database is now imported in your new empty database.
+
+## 2. Setup server to work with Database
+Point the project to the database by editing the following info in server/index.js:   
+(It's recommended that you make use of the package that ships with this project: [dotenv](https://www.npmjs.com/package/dotenv).)
+```js
+var connection = mysql.createConnection({
+  host: /* your database host */, // usually localhost
+  user: /* [your_username] */,
+  password: /* [your_password] */,
+  database: /* [your_new_database_name] */
+})
+```
+## 3. Page usage
+
+after running the server, to see all animals in your database go to:
+```
+localhost:1902
+```
+you can see a specific animal via:
+```
+localhost:1902/IdOfAnimalToSee
+```
+you can add animals via:
+```
+localhost:1902/add   
+```
+you can delete animals from the database by running the following code in the command line:
+```
+curl --verbose --request DELETE localhost:1902/idOfAnimalToRemove
+```
 
 ## What did I work on
 
-I, Folkert-Jan van der Pol, worked on:
-* Adding support for the serving of images by the database
-* Handling GET requests to specific id's of animals
-* Handling DELETE requests to specific id's of animals
-* support for response in either HTML or JSON
-* Adding new animals via /add
-* Adding new animals via curl request using JSON data
-* Uploading images for newly created animals
-* Error handling:
-    * 404 Page not found
-    * 400 Bad request
-    * 410 Deleted
-    * 500 Internal server error
+* For previous work done on this project, check the master branch
+* Rewrote the server/index.js to work with a mySQL database instead of a fake database
 
 
 ### What succeeded / failed
 
-All above additions are, as far as I have tested, working.
-I have as of yet failed to add support for PUT and PATCH requests, due to a lack of time. The handling of these requests might be added in the near future.
+Most things in the rewrite went really smooth, the only thing that took some time was writing the right query to get the data from an animal that I wanted.
 
 ## Brief description of code
 
 ```txt
 build.js - crawls new data (probably not needed)
-db/data.json - raw data in json format
-db/image/ - images for all animals
-db/index.js - interface for accessing data
-db/readme.md - docs for `db`
 server/ - web server
 server/helpers.js - utility functions used in the views to render animals
 server/index.js - express server
@@ -70,12 +93,6 @@ view/error.ejs - ejs template for errors
 *   `npm run lint` — Check browser code and node code for problems
 *   `npm run build` — Build browser code
 
-## Data
-
-Data is crawled (by `build.js`) from [nycacc][].
-If you have the means to do so, you should consider becoming a foster parent,
-volunteering at your local animal shelter, or donating!
-
 ## License
 
 [MIT][] © [Titus Wormer][author]
@@ -87,6 +104,6 @@ volunteering at your local animal shelter, or donating!
 [author]: http://wooorm.com
 [student]: https://github.com/FJvdPol
 
-[assignment]: https://github.com/cmda-be/course-17-18/blob/master/week-4.md#shelter
+[assignment]: https://github.com/cmda-be/course-17-18/blob/master/week-5.md#storage
 
 [nycacc]: http://nycacc.org

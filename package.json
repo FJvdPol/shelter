@@ -1,17 +1,16 @@
 {
   "private": true,
-  "name": "shelter",
-  "version": "1.1.0",
-  "description": "Learn express by finishing a simplified real world example",
+  "name": "storage",
+  "version": "1.0.0",
+  "description": "Learning SQL by finishing master branch 'shelter' project",
   "license": "MIT",
   "keywords": [],
-  "repository": "cmda-be/shelter",
+  "repository": "fjvdpol/shelter/tree/storage",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
     "Folkert-Jan van der Pol <folkertjanvanderpol@gmail.com> (https://github.com/FJvdPol)"
   ],
   "files": [
-    "db",
     "server",
     "src",
     "static",
