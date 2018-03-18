@@ -53,12 +53,8 @@ function plural(word, value) {
 function configureAddData(data){
     data.age = Number(data.age)
     data.weight = Number(data.weight)
-    data.vaccinated === 'true' ?
-     data.vaccinated = true
-     : data.vaccinated = false
-    data.declawed === 'true' ?
-     data.declawed = true
-     : data.declawed = false
+    data.vaccinated === 'true' ? data.vaccinated = true : data.vaccinated = false
+    data.declawed === 'true' ? data.declawed = true : data.declawed = false
     if (data.secondaryColor === ''){
         data.secondaryColor = undefined
     }

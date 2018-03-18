@@ -36,12 +36,20 @@ Point the project to the database by editing the following info in server/index.
 (It's recommended that you make use of the package that ships with this project: [dotenv](https://www.npmjs.com/package/dotenv).)
 ```js
 var connection = mysql.createConnection({
-  host: /* your database host */, // usually localhost
+  host: /* [your_database_host] */, // usually localhost
   user: /* [your_username] */,
   password: /* [your_password] */,
   database: /* [your_new_database_name] */
 })
 ```
+If you choose to use the dotenv package, make a new file in the project's root folder called `.env` and populate it with the following code:
+```
+DB_HOST=[your_database_host]
+DB_USER=[your_username]
+DB_PASSWORD=[your_password]
+DB_NAME=[your_new_database_name]
+```
+
 ## 3. Page usage
 
 after running the server, to see all animals in your database go to:

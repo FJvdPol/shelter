@@ -41,7 +41,7 @@ module.exports = express()
   // .put('/:id', setAnimal)
   // .patch('/:id', change)
   .delete('/:id', removeAnimal)
-  .use(notFound)
+  .use(unhandledErrors)
   .listen(1902)
 
 function renderForm(req, res){
@@ -55,8 +55,7 @@ function allAnimals(req, res, next) {
       if (err) {
           console.log('get all error: ', err)
           result.errors.push(err)
-          showErrorPage(result, res)
-          return next(err)
+          return showErrorPage(result, res)
       }
       result.data = data
       res.render('list.ejs', Object.assign({}, result, helpers))
@@ -75,8 +74,8 @@ function addAnimal(req, res, next){
     connection.query('INSERT INTO animal SET ?', data, onAddAnimal)
 
     function onAddAnimal(err, data){
+        var result = {errors: [], data: null}
         if (err) {
-            var result = {errors: [], data: null}
             if (req.file) {
                 fs.unlink(req.file.path, function(fsErr) {
                     if (fsErr) {
@@ -92,7 +91,11 @@ function addAnimal(req, res, next){
         } else {
             var id = data.insertId
             if (req.file){
-                fs.rename(req.file.path, 'static/image/'+data.insertId+'.jpg')
+                fs.rename(req.file.path, 'static/image/'+data.insertId+'.jpg', (err) => {
+                    if (err) {
+                        result.errors.push({id: 500, title: 'Internal Server Error'}, err)
+                    }
+                })
             }
             res.redirect('/' + data.insertId)
         }
@@ -103,16 +106,21 @@ function addAnimal(req, res, next){
 function getAnimal(req, res, next){
     var result = {errors: [], data: null}
     var id = req.params.id
-    connection.query('SELECT animal.*, shelter.shelterName, shelter.shelterAddress, shelter.shelterCity FROM animal LEFT JOIN shelter ON animal.shelterId=shelter.sh_id WHERE animal.id = ?', id, onGetAnimal)
+    if (isValidId(id)) { // if requested id is number
+         connection.query('SELECT animal.*, shelter.shelterName, shelter.shelterAddress, shelter.shelterCity FROM animal LEFT JOIN shelter ON animal.shelterId=shelter.sh_id WHERE animal.id = ?', id, onGetAnimal)
+    } else { // if request id is not a number
+        result.errors.push({id: 400, title: 'Bad request'})
+        return showErrorPage(result, res)
+    }
+
     function onGetAnimal(err, data){
         if (err || data.length === 0){
-            result = getIdErrResult(id, result)
+            result.errors.push({id: 404, title: 'page not found'})
             if (err){
                 result.errors.push(err)
             }
             return showErrorPage(result, res)
         } else {
-
             result.data = data[0]
             res.format({
                 json: () => res.json(result),
@@ -123,30 +131,32 @@ function getAnimal(req, res, next){
 }
 
 function removeAnimal(req, res, next){
+    var result = {errors: [], data: null}
     var id = req.params.id
-    connection.query('DELETE FROM animal WHERE id = ?', id, onRemoveAnimal)
+    if (isValidId(id)){
+        connection.query('DELETE FROM animal WHERE id = ?', id, onRemoveAnimal)
+    } else {
+        result.errors.push({id: 400, title: 'Bad Request'})
+        return showErrorPage(result, res)
+    }
 
     function onRemoveAnimal(err, data){
-        var result = {errors: [], data: null}
         if (err){
-            result = getIdErrResult(id, result)
-            result.errors.push(err)
-            return showErrorPage(result, res)
+            result.errors.push({id: 404, title: 'Page not found'}, err)
+            showErrorPage(result, res)
         } else {
-            result.data = data[0]
-            res.status(204).json(result)
+            res.status(204).json()
         }
     }
 }
 
-function getIdErrResult(id, result){
+function isValidId(id){
     //.match regex on next line was found here: https://stackoverflow.com/questions/1779013/check-if-string-contains-only-digits
     if (id.match(/^[0-9]+$/) != null) { // if requested id is number
-        result.errors.push({id: 404, title: 'page not found'})
+        return true;
     } else { // if request id is not a number
-        result.errors.push({id: 400, title: 'Bad request'})
+        return false;
     }
-    return result
 }
 
 function showErrorPage(result, res) {
@@ -158,6 +168,6 @@ function showErrorPage(result, res) {
     })
 }
 
-function notFound(err, req, res, next){
-    console.log('notFound err: ', err)
+function unhandledErrors(err, req, res, next){
+    console.log('Unhandled error: ', err)
 }
