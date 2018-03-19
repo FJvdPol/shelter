@@ -79,7 +79,7 @@ function addAnimal(req, res, next){
             if (req.file) {
                 fs.unlink(req.file.path, function(fsErr) {
                     if (fsErr) {
-                        result.errors.push({id:500, title: 'Internal server error'}, fsErr)
+                        result.errors.push({id:400, title: 'Internal server error'}, fsErr)
                     } else {
                         result.errors.push({id: 422, title: 'Unprocessable entity'})
                     }
